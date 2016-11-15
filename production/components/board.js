@@ -3,29 +3,30 @@ var Board = React.createClass({
   // ----------------------------------------------------------------
   // REACT LIFE CYCLE
   // ----------------------------------------------------------------
+  propTypes: {
+    count: function(props, propName) {
+
+      if (typeof props[propName] !== "number") {
+        return new Error('Count prop must be a number');
+      } // if NaN
+
+      if (props[propName] > 100) {
+        return new Error('Creating' +props[propName]+ 'notes is rediculous');
+      } // if more than 100
+
+    } // count
+  }, // propTypes
+
   getInitialState: function () {
     return {
       notes: []
     } // return
   }, // getInitialState
 
-  componentWillMount: function () {
-    this.style = {
-      right: this.randomBetween(0, window.innerWidth - 150) + 'px',
-      top: this.randomBetween(0, window.innerHeight - 150) + 'px',
-      transform: 'rotate(' + this.randomBetween(-15, -15) + 'deg)'
-
-    } // style
-  }, // componentWillMount
-
 
   // ----------------------------------------------------------------
   // HELPERS
   // ----------------------------------------------------------------
-  randomBetween: function (min, max) {
-    return (min + Math.ceil( Math.random() * max)); // return
-  }, // randomBetween
-
   nextId: function () {
     this.uniqueId = this.uniqueId || 0;
     return this.uniqueId++;
@@ -35,19 +36,6 @@ var Board = React.createClass({
   // ----------------------------------------------------------------
   // METHODS
   // ----------------------------------------------------------------
-    propTypes: {
-      count: function(props, propName) {
-
-        if (typeof props[propName] !== "number") {
-          return new Error('Count prop must be a number');
-        } // if NaN
-
-        if (props[propName] > 100) {
-          return new Error('Creating' +props[propName]+ 'notes is rediculous');
-        } // if more than 100
-
-      } // count
-    }, // propTypes
 
     add: function (text) {
       var arr = this.state.notes;
@@ -79,6 +67,7 @@ var Board = React.createClass({
         >{note.note}</Note>
       );
     }, // eachNote
+
 
     // ----------------------------------------------------------------
     // RENDER

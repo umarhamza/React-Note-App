@@ -1,10 +1,10 @@
-"use strict";
+'use strict';
 
 var Note = React.createClass({
-  displayName: "Note",
+  displayName: 'Note',
 
   // ----------------------------------------------------------------
-  // INITIAL STATE
+  // REACT LIFE CYCLE
   // ----------------------------------------------------------------
   getInitialState: function getInitialState() {
     return {
@@ -12,6 +12,21 @@ var Note = React.createClass({
     } // return
     ;
   },
+
+  componentWillMount: function componentWillMount() {
+    this.style = {
+      right: this.randomBetween(0, window.innerWidth - 150) + 'px',
+      top: this.randomBetween(0, window.innerHeight - 150) + 'px',
+      transform: 'rotate(' + this.randomBetween(-15, 15) + 'deg)'
+    };
+  }, // componentWillMount
+
+  // ----------------------------------------------------------------
+  // HELPERS
+  // ----------------------------------------------------------------
+  randomBetween: function randomBetween(min, max) {
+    return min + Math.ceil(Math.random() * max);
+  }, // randomBetween
 
   // ----------------------------------------------------------------
   // METHODS
@@ -34,30 +49,31 @@ var Note = React.createClass({
   // ----------------------------------------------------------------
   renderDisplay: function renderDisplay() {
     return React.createElement(
-      "div",
-      { className: "note", style: this.style },
+      'div',
+      { className: 'note',
+        style: this.style },
       React.createElement(
-        "p",
+        'p',
         null,
         this.props.children
       ),
       React.createElement(
-        "span",
+        'span',
         null,
-        React.createElement("button", { onClick: this.edit,
-          className: "btn btn-primary glyphicon glyphicon-pencil" }),
-        React.createElement("button", { onClick: this.remove,
-          className: "btn btn-danger glyphicon glyphicon-trash" })
+        React.createElement('button', { onClick: this.edit,
+          className: 'btn btn-primary glyphicon glyphicon-pencil' }),
+        React.createElement('button', { onClick: this.remove,
+          className: 'btn btn-danger glyphicon glyphicon-trash' })
       )
     );
   }, // renderDisplay
 
   renderForm: function renderForm() {
     return React.createElement(
-      "div",
-      { className: "note", style: this.style },
-      React.createElement("textarea", { ref: "newText", defaultValue: this.props.children, className: "form-control" }),
-      React.createElement("button", { onClick: this.save, className: "btn btn-success btn-sm glyphicon glyphicon-floppy-disk" })
+      'div',
+      { className: 'note', style: this.style },
+      React.createElement('textarea', { ref: 'newText', defaultValue: this.props.children, className: 'form-control' }),
+      React.createElement('button', { onClick: this.save, className: 'btn btn-success btn-sm glyphicon glyphicon-floppy-disk' })
     );
   }, // renderForm
 
@@ -81,38 +97,6 @@ var Board = React.createClass({
   // ----------------------------------------------------------------
   // REACT LIFE CYCLE
   // ----------------------------------------------------------------
-  getInitialState: function getInitialState() {
-    return {
-      notes: []
-    } // return
-    ;
-  }, // getInitialState
-
-  componentWillMount: function componentWillMount() {
-    this.style = {
-      right: this.randomBetween(0, window.innerWidth - 150) + 'px',
-      top: this.randomBetween(0, window.innerHeight - 150) + 'px',
-      transform: 'rotate(' + this.randomBetween(-15, -15) + 'deg)'
-
-    } // style
-    ;
-  }, // componentWillMount
-
-  // ----------------------------------------------------------------
-  // HELPERS
-  // ----------------------------------------------------------------
-  randomBetween: function randomBetween(min, max) {
-    return min + Math.ceil(Math.random() * max); // return
-  }, // randomBetween
-
-  nextId: function nextId() {
-    this.uniqueId = this.uniqueId || 0;
-    return this.uniqueId++;
-  }, // nextId
-
-  // ----------------------------------------------------------------
-  // METHODS
-  // ----------------------------------------------------------------
   propTypes: {
     count: function count(props, propName) {
 
@@ -125,6 +109,25 @@ var Board = React.createClass({
       } // if more than 100
     } // count
   }, // propTypes
+
+  getInitialState: function getInitialState() {
+    return {
+      notes: []
+    } // return
+    ;
+  }, // getInitialState
+
+  // ----------------------------------------------------------------
+  // HELPERS
+  // ----------------------------------------------------------------
+  nextId: function nextId() {
+    this.uniqueId = this.uniqueId || 0;
+    return this.uniqueId++;
+  }, // nextId
+
+  // ----------------------------------------------------------------
+  // METHODS
+  // ----------------------------------------------------------------
 
   add: function add(text) {
     var arr = this.state.notes;

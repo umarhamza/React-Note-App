@@ -1,13 +1,30 @@
 var Note = React.createClass({
 
   // ----------------------------------------------------------------
-  // INITIAL STATE
+  // REACT LIFE CYCLE
   // ----------------------------------------------------------------
     getInitialState: function() {
       return {
         editing: false
       } // return
     },
+
+
+    componentWillMount: function() {
+        this.style = {
+            right: this.randomBetween(0, window.innerWidth - 150) + 'px',
+            top: this.randomBetween(0, window.innerHeight - 150) + 'px',
+            transform: 'rotate(' + this.randomBetween(-15, 15) + 'deg)'
+        };
+    }, // componentWillMount
+
+
+    // ----------------------------------------------------------------
+    // HELPERS
+    // ----------------------------------------------------------------
+    randomBetween: function (min, max) {
+      return (min + Math.ceil(Math.random() * max));
+    }, // randomBetween
 
 
     // ----------------------------------------------------------------
@@ -32,7 +49,8 @@ var Note = React.createClass({
     // ----------------------------------------------------------------
     renderDisplay: function() {
       return (
-          <div className="note" style={this.style}>
+          <div className="note"
+          style={this.style}>
           <p>{this.props.children}</p>
               <span>
                   <button onClick={this.edit}
