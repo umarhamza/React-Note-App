@@ -1,7 +1,7 @@
-'use strict';
+"use strict";
 
 var Note = React.createClass({
-  displayName: 'Note',
+  displayName: "Note",
 
   // ----------------------------------------------------------------
   // INITIAL STATE
@@ -16,18 +16,17 @@ var Note = React.createClass({
   // ----------------------------------------------------------------
   // METHODS
   // ----------------------------------------------------------------
-  edit: function Edit() {
+  edit: function edit() {
     this.setState({ editing: true });
   }, // edit
 
-  save: function Save() {
-    var val = this.refs.newText.getDOMNode().value;
-    alert('Save ' + val);
+  save: function save() {
+    this.props.onChange(this.refs.newText.getDOMNode().value, this.props.index);
     this.setState({ editing: false });
   }, // save
 
   remove: function remove() {
-    alert('removing');
+    this.props.onRemove(this.props.index);
   }, // remove
 
   // ----------------------------------------------------------------
@@ -35,30 +34,30 @@ var Note = React.createClass({
   // ----------------------------------------------------------------
   renderDisplay: function renderDisplay() {
     return React.createElement(
-      'div',
-      { className: 'note' },
+      "div",
+      { className: "note", style: this.style },
       React.createElement(
-        'p',
+        "p",
         null,
         this.props.children
       ),
       React.createElement(
-        'span',
+        "span",
         null,
-        React.createElement('button', { onClick: this.edit,
-          className: 'btn btn-primary glyphicon glyphicon-pencil' }),
-        React.createElement('button', { onClick: this.remove,
-          className: 'btn btn-danger glyphicon glyphicon-trash' })
+        React.createElement("button", { onClick: this.edit,
+          className: "btn btn-primary glyphicon glyphicon-pencil" }),
+        React.createElement("button", { onClick: this.remove,
+          className: "btn btn-danger glyphicon glyphicon-trash" })
       )
     );
   }, // renderDisplay
 
   renderForm: function renderForm() {
     return React.createElement(
-      'div',
-      { className: 'note' },
-      React.createElement('textarea', { ref: 'newText', defaultValue: this.props.children, className: 'form-control' }),
-      React.createElement('button', { onClick: this.save, className: 'btn btn-success btn-sm glyphicon glyphicon-floppy-disk' })
+      "div",
+      { className: "note", style: this.style },
+      React.createElement("textarea", { ref: "newText", defaultValue: this.props.children, className: "form-control" }),
+      React.createElement("button", { onClick: this.save, className: "btn btn-success btn-sm glyphicon glyphicon-floppy-disk" })
     );
   }, // renderForm
 
@@ -80,14 +79,33 @@ var Board = React.createClass({
   displayName: 'Board',
 
   // ----------------------------------------------------------------
-  // INITIAL STATE
+  // REACT LIFE CYCLE
   // ----------------------------------------------------------------
   getInitialState: function getInitialState() {
     return {
-      notes: ['Call Bill', 'Email Lisa', 'Make apts', 'Send message'] // notes
+      notes: []
     } // return
     ;
   }, // getInitialState
+
+  componentWillMount: function componentWillMount() {
+    this.style = {
+      right: this.randomBetween(0, window.innerWidth - 150) + px,
+      top: this.randomBetween(0, window.innerHeight - 150) + px,
+      transform: 'rotate(' + this.randomBetween(-15, -15) + 'deg)'
+
+    } // style
+    ;
+  }, // componentWillMount
+
+  // ----------------------------------------------------------------
+  // HELPERS
+  // ----------------------------------------------------------------
+  randomBetween: function randomBetween(min, max) {
+    return min + Math.ceil(Math.random() * max); // return
+  }, // randomBetween
+
+  nextId: function nextId() {}, // nextId
 
   // ----------------------------------------------------------------
   // METHODS
@@ -105,6 +123,12 @@ var Board = React.createClass({
     } // count
   }, // propTypes
 
+  add: function add(text) {
+    var arr = this.state.notes;
+    arr.push(text);
+    this.setState({ notes: arr });
+  }, // add
+
   update: function update(newText, i) {
     var arr = this.state.notes;
     arr[i] = newText;
@@ -117,6 +141,18 @@ var Board = React.createClass({
     this.setState({ notes: arr });
   }, // remove
 
+  eachNote: function eachNote(note, i) {
+    return React.createElement(
+      Note,
+      { key: i,
+        index: i,
+        onChange: this.update,
+        onRemove: this.remove
+      },
+      note
+    );
+  }, // eachNote
+
   // ----------------------------------------------------------------
   // RENDER
   // ----------------------------------------------------------------
@@ -125,14 +161,9 @@ var Board = React.createClass({
     return React.createElement(
       'div',
       { className: 'board' },
-      this.state.notes.map(function (note, i) {
-        return React.createElement(
-          Note,
-          { key: i },
-          note
-        );
-      }),
-      ' //map'
+      this.state.notes.map(this.eachNote),
+      React.createElement('button', { className: 'btn btn-sm btn-success glyphicon glyphicon-plus',
+        onClick: this.add.bind(null, 'New note...') })
     ); // return
   } // render
 }); // Board
@@ -142,7 +173,6 @@ var Board = React.createClass({
 // ----------------------------------------------------------------
 
 React.render(React.createElement(Board, { count: '10' }), document.getElementById('react-container')); // render
-// return
 ;"use strict";
 
 //@prepros-prepend components/note.js

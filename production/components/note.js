@@ -13,18 +13,17 @@ var Note = React.createClass({
     // ----------------------------------------------------------------
     // METHODS
     // ----------------------------------------------------------------
-    edit: function Edit() {
+    edit: function () {
         this.setState({editing: true});
     }, // edit
 
-    save: function Save() {
-      var val = this.refs.newText.getDOMNode().value;
-      alert('Save ' + val);
+    save: function () {
+      this.props.onChange(this.refs.newText.getDOMNode().value, this.props.index);
       this.setState({editing: false});
     }, // save
 
-    remove: function() {
-        alert('removing');
+    remove: function () {
+      this.props.onRemove(this.props.index);
     }, // remove
 
 
@@ -33,7 +32,7 @@ var Note = React.createClass({
     // ----------------------------------------------------------------
     renderDisplay: function() {
       return (
-          <div className="note">
+          <div className="note" style={this.style}>
           <p>{this.props.children}</p>
               <span>
                   <button onClick={this.edit}
@@ -48,7 +47,7 @@ var Note = React.createClass({
 
     renderForm: function() {
         return (
-          <div className="note">
+          <div className="note" style={this.style}>
             <textarea ref="newText" defaultValue={this.props.children} className="form-control"></textarea>
             <button onClick={this.save} className="btn btn-success btn-sm glyphicon glyphicon-floppy-disk" />
           </div>

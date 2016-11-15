@@ -1,18 +1,35 @@
 var Board = React.createClass({
 
   // ----------------------------------------------------------------
-  // INITIAL STATE
+  // REACT LIFE CYCLE
   // ----------------------------------------------------------------
   getInitialState: function () {
     return {
-      notes: [
-        'Call Bill',
-        'Email Lisa',
-        'Make apts',
-        'Send message'
-      ] // notes
+      notes: []
     } // return
   }, // getInitialState
+
+  componentWillMount: function () {
+    this.style = {
+      right: this.randomBetween(0, window.innerWidth - 150) + px,
+      top: this.randomBetween(0, window.innerHeight - 150) + px,
+      transform: 'rotate(' + this.randomBetween(-15, -15) + 'deg)'
+
+    } // style
+  }, // componentWillMount
+
+
+  // ----------------------------------------------------------------
+  // HELPERS
+  // ----------------------------------------------------------------
+  randomBetween: function (min, max) {
+    return (min + Math.ceil( Math.random() * max)); // return
+  }, // randomBetween
+
+  nextId: function () {
+    
+  }, // nextId
+
 
   // ----------------------------------------------------------------
   // METHODS
@@ -31,6 +48,12 @@ var Board = React.createClass({
       } // count
     }, // propTypes
 
+    add: function (text) {
+      var arr = this.state.notes;
+      arr.push(text);
+      this.setState({notes:arr});
+    }, // add
+
     update: function (newText, i) {
       var arr = this.state.notes;
       arr[i] = newText;
@@ -48,7 +71,7 @@ var Board = React.createClass({
         <Note key={i}
               index={i}
               onChange={this.update}
-              onRemove={this.update}
+              onRemove={this.remove}
         >{note}</Note>
       );
     }, // eachNote
@@ -60,12 +83,11 @@ var Board = React.createClass({
     render: function() {
       return (
         <div className="board">
-          {this.state.notes.map(function (note, i) {
-            return (
-            ); // return
-          })} //map
+          {this.state.notes.map(this.eachNote)}
+          <button className="btn btn-sm btn-success glyphicon glyphicon-plus"
+          onClick={this.add.bind(null, 'New note...')} />
         </div>
-      ); // return
+      ) // return
     } // render
 }); // Board
 
