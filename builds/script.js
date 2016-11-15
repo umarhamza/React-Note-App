@@ -90,8 +90,8 @@ var Board = React.createClass({
 
   componentWillMount: function componentWillMount() {
     this.style = {
-      right: this.randomBetween(0, window.innerWidth - 150) + px,
-      top: this.randomBetween(0, window.innerHeight - 150) + px,
+      right: this.randomBetween(0, window.innerWidth - 150) + 'px',
+      top: this.randomBetween(0, window.innerHeight - 150) + 'px',
       transform: 'rotate(' + this.randomBetween(-15, -15) + 'deg)'
 
     } // style
@@ -105,7 +105,10 @@ var Board = React.createClass({
     return min + Math.ceil(Math.random() * max); // return
   }, // randomBetween
 
-  nextId: function nextId() {}, // nextId
+  nextId: function nextId() {
+    this.uniqueId = this.uniqueId || 0;
+    return this.uniqueId++;
+  }, // nextId
 
   // ----------------------------------------------------------------
   // METHODS
@@ -125,13 +128,16 @@ var Board = React.createClass({
 
   add: function add(text) {
     var arr = this.state.notes;
-    arr.push(text);
+    arr.push({
+      id: this.nextId(),
+      note: text
+    });
     this.setState({ notes: arr });
   }, // add
 
   update: function update(newText, i) {
     var arr = this.state.notes;
-    arr[i] = newText;
+    arr[i].note = newText;
     this.setState({ notes: arr });
   }, // update
 
@@ -144,12 +150,12 @@ var Board = React.createClass({
   eachNote: function eachNote(note, i) {
     return React.createElement(
       Note,
-      { key: i,
+      { key: note.id,
         index: i,
         onChange: this.update,
         onRemove: this.remove
       },
-      note
+      note.note
     );
   }, // eachNote
 
